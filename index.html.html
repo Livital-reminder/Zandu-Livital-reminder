@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zandu Livital · Set Your Daily Reminder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep:  #0D4F3C;
+    --green-mid:   #1A7A58;
+    --green-light: #E8F5EF;
+    --green-pale:  #F3FAF6;
+    --gold:        #C8973A;
+    --text-primary: #1A1A1A;
+    --text-muted:   #6B7280;
+    --border:       #D1E8DC;
+    --white:        #FFFFFF;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--green-pale);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 60px;
+  }
+
+  /* ── header ── */
+  .header {
+    width: 100%;
+    background: var(--green-deep);
+    padding: 22px 24px 18px;
+    text-align: center;
+  }
+  .brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--white);
+    line-height: 1.25;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: #A8CFC0;
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* ── leaf divider ── */
+  .divider {
+    width: 100%;
+    height: 28px;
+    background: var(--green-deep);
+    position: relative;
+  }
+  .divider::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 28px;
+    background: var(--green-pale);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+
+  /* ── card ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 480px;
+    margin: 28px 20px 0;
+    box-shadow: 0 4px 24px rgba(13,79,60,0.07);
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    margin-bottom: 18px;
+  }
+
+  /* ── time pickers ── */
+  .time-row {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .time-block {
+    background: var(--green-pale);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .time-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--green-light);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .time-info { flex: 1; }
+  .time-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-deep);
+    margin-bottom: 2px;
+  }
+  .time-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  input[type="time"] {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--green-deep);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    background: var(--white);
+    outline: none;
+    width: 120px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  input[type="time"]:focus {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(26,122,88,0.1);
+  }
+
+  /* ── note ── */
+  .note-block {
+    background: #FFFBF0;
+    border: 1px solid #EDD89A;
+    border-radius: 12px;
+    padding: 13px 15px;
+    font-size: 12px;
+    color: #7A5C1E;
+    line-height: 1.6;
+    margin-bottom: 26px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .note-block .note-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── button ── */
+  .btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--green-deep);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:hover { background: var(--green-mid); }
+  .btn:active { transform: scale(0.98); }
+
+  /* ── success ── */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 20px 0 4px;
+  }
+  .success-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+  }
+  .success-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--green-deep);
+    margin-bottom: 8px;
+  }
+  .success-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── how it works ── */
+  .how-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 26px 28px;
+    width: 100%;
+    max-width: 480px;
+    margin: 16px 20px 0;
+  }
+  .how-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    margin-bottom: 18px;
+  }
+  .steps { display: flex; flex-direction: column; gap: 14px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num {
+    width: 26px; height: 26px;
+    background: var(--green-deep);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text { font-size: 13px; color: var(--text-primary); line-height: 1.6; }
+  .step-text strong { color: var(--green-deep); }
+
+  /* ── footer ── */
+  .footer {
+    margin-top: 36px;
+    font-size: 11px;
+    color: #A0ADB8;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">Zandu · Livital</div>
+  <div class="header-title">Set Your Daily Reminder</div>
+  <div class="header-sub">2 reminders a day · 90 days · straight to your calendar</div>
+</div>
+<div class="divider"></div>
+
+<div class="card">
+  <div id="form-view">
+    <div class="section-label">Choose your reminder times</div>
+
+    <div class="time-row">
+      <div class="time-block">
+        <div class="time-icon">🌅</div>
+        <div class="time-info">
+          <div class="time-name">Morning dose</div>
+          <div class="time-hint">After breakfast — pick your time</div>
+        </div>
+        <input type="time" id="time1" value="09:00">
+      </div>
+
+      <div class="time-block">
+        <div class="time-icon">🌙</div>
+        <div class="time-info">
+          <div class="time-name">Evening dose</div>
+          <div class="time-hint">After dinner — pick your time</div>
+        </div>
+        <input type="time" id="time2" value="20:00">
+      </div>
+    </div>
+
+    <div class="note-block">
+      <span class="note-icon">💡</span>
+      <span>Both reminders repeat daily for 90 days. After downloading, open the file to import into Google Calendar, Apple Calendar, or Outlook — takes under 10 seconds.</span>
+    </div>
+
+    <button class="btn" onclick="generateICS()">
+      <span>📅</span> Download my 90-day reminder
+    </button>
+  </div>
+
+  <div class="success" id="success-view">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Reminders ready!</div>
+    <div class="success-text">
+      Your .ics file has downloaded.<br>
+      Open it to add both reminders to your calendar.<br><br>
+      <strong style="color:var(--green-deep)">90 days. Stay consistent. Your liver will notice.</strong> 🌿
+    </div>
+    <br>
+    <button class="btn" onclick="resetForm()" style="margin-top:8px;background:#f3faf6;color:var(--green-deep);border:1.5px solid var(--border);">
+      ← Set different times
+    </button>
+  </div>
+</div>
+
+<div class="how-card">
+  <div class="how-title">How it works</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">Pick your <strong>morning</strong> and <strong>evening</strong> reminder times above.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">Tap <strong>Download</strong> — a .ics calendar file saves to your device instantly.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Open the file</strong> — your calendar app (Google, Apple, Outlook) will ask you to import it. Tap Add.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">Done. <strong>2 daily reminders</strong> are now set for the next 90 days — at exactly the times you chose. 🌿</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Zandu Livital · Emami Limited · zanducare.com<br>
+  Reminder file works on Android, iPhone, and all desktop calendars.
+</div>
+
+<script>
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function toICSDate(d){
+  return d.getFullYear()
+    + pad(d.getMonth()+1)
+    + pad(d.getDate())
+    + 'T'
+    + pad(d.getHours())
+    + pad(d.getMinutes())
+    + '00';
+}
+
+function generateICS(){
+  const t1 = document.getElementById('time1').value;
+  const t2 = document.getElementById('time2').value;
+
+  if(!t1 || !t2){
+    alert('Please set both reminder times before downloading.');
+    return;
+  }
+
+  const [h1,m1] = t1.split(':').map(Number);
+  const [h2,m2] = t2.split(':').map(Number);
+
+  // start from today
+  const today = new Date();
+  today.setSeconds(0); today.setMilliseconds(0);
+
+  // 90-day end
+  const endDate = new Date(today);
+  endDate.setDate(endDate.getDate() + 90);
+
+  function makeUntil(d, h, m){
+    const u = new Date(d);
+    u.setDate(u.getDate() + 90);
+    u.setHours(h, m, 0, 0);
+    return toICSDate(u) + 'Z';
+  }
+
+  const start1 = new Date(today); start1.setHours(h1, m1, 0, 0);
+  const end1   = new Date(start1); end1.setMinutes(end1.getMinutes() + 15);
+
+  const start2 = new Date(today); start2.setHours(h2, m2, 0, 0);
+  const end2   = new Date(start2); end2.setMinutes(end2.getMinutes() + 15);
+
+  const until1 = makeUntil(today, h1, m1);
+  const until2 = makeUntil(today, h2, m2);
+
+  const fmt1 = (h1 >= 12 ? `${h1>12?h1-12:12}:${pad(m1)} PM` : `${h1===0?12:h1}:${pad(m1)} AM`);
+  const fmt2 = (h2 >= 12 ? `${h2>12?h2-12:12}:${pad(m2)} PM` : `${h2===0?12:h2}:${pad(m2)} AM`);
+
+  const uid1 = 'livital-morning-' + Date.now() + '@zanducare.com';
+  const uid2 = 'livital-evening-' + (Date.now()+1) + '@zanducare.com';
+
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//ZanduCare//Livital Reminder//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:Zandu Livital Reminders',
+    'X-WR-TIMEZONE:Asia/Kolkata',
+
+    // Event 1 — Morning
+    'BEGIN:VEVENT',
+    'UID:' + uid1,
+    'DTSTART;TZID=Asia/Kolkata:' + toICSDate(start1),
+    'DTEND;TZID=Asia/Kolkata:'   + toICSDate(end1),
+    'RRULE:FREQ=DAILY;COUNT=90',
+    'SUMMARY:💊 Take Zandu Livital — Morning Dose',
+    'DESCRIPTION:Take 1 Livital tab after breakfast with lukewarm water.\\nStay consistent — your liver is working for you. 🌿\\nzanducare.com',
+    'LOCATION:',
+    'BEGIN:VALARM',
+    'TRIGGER:-PT0M',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Time for your Zandu Livital morning tab 💊',
+    'END:VALARM',
+    'END:VEVENT',
+
+    // Event 2 — Evening
+    'BEGIN:VEVENT',
+    'UID:' + uid2,
+    'DTSTART;TZID=Asia/Kolkata:' + toICSDate(start2),
+    'DTEND;TZID=Asia/Kolkata:'   + toICSDate(end2),
+    'RRULE:FREQ=DAILY;COUNT=90',
+    'SUMMARY:💊 Take Zandu Livital — Evening Dose',
+    'DESCRIPTION:Take 1 Livital tab after dinner with lukewarm water.\\nConsistency for 90 days is the goal. Keep going! 🌿\\nzanducare.com',
+    'LOCATION:',
+    'BEGIN:VALARM',
+    'TRIGGER:-PT0M',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Time for your Zandu Livital evening tab 💊',
+    'END:VALARM',
+    'END:VEVENT',
+
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'Zandu_Livital_90Day_Reminder.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  document.getElementById('form-view').style.display = 'none';
+  document.getElementById('success-view').style.display = 'block';
+}
+
+function resetForm(){
+  document.getElementById('form-view').style.display = 'block';
+  document.getElementById('success-view').style.display = 'none';
+}
+</script>
+</body>
+</html>
